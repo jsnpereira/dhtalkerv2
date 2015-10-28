@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <f:view renderKitId="PRIMEFACES_MOBILE" />
+    <h:head>
+    </h:head>
+    <h:body>
+        <pm:page>
+            <pm:content>
+
+                <h1>Cadastro do Usuário</h1>
+                <br/>
+                <h:form>
+                    <p:panel header="Usuário e senha">
+                        <p:outputLabel value="Usuário:"></p:outputLabel>
+                        <pm:field> 
+                            <p:inputText value="#{cadastroMobileController.usuario.usuario}" required="true" requiredMessage="Favor insere seu usuário"  validatorMessage="Usuário: Dígito deve ser mínimo de 4 letras e máximo 20 letras"> 
+                                <f:validateLength minimum="4" maximum="20"/>
+                            </p:inputText>
+                        </pm:field>
+                        <p:outputLabel value="Senha:"></p:outputLabel>
+                        <pm:field>
+                            <p:password value="#{cadastroMobileController.usuario.senha}" required="true" requiredMessage="Favor insere sua nova senha" validatorMessage="A senha deve ser mínima tamaho é 6 e máximo 15">
+                                <f:validateLength minimum="6" maximum="15"/>
+                            </p:password>
+                        </pm:field>
+                        <p:outputLabel value="Senha Repetida:"></p:outputLabel>
+                        <pm:field>
+                            <p:password value="#{cadastroMobileController.senhaRepetida}" required="true" requiredMessage="Favor insere sua nova senha repetida"  validatorMessage="A repete senha deve ser mínima tamaho é 6 e máximo 15" >
+                                <f:validateLength minimum="6" maximum="15"/>
+                            </p:password>
+                        </pm:field>
+                    </p:panel>
+                    <p:panel header="Dados do Usuário">
+                        <p:outputLabel value="Nome:"></p:outputLabel>
+                        <pm:field>
+                            <p:inputText value="#{cadastroMobileController.usuario.nome}" required="true" requiredMessage="Favor insere seu nome" validatorMessage="Nome: Letra dever digito o mínimo 4 letras e máximo 30 letras" >
+                                <f:validateLength minimum="4" maximum="30" />
+                            </p:inputText>
+                        </pm:field>
+                        <p:outputLabel value="E-mail:"></p:outputLabel>
+                        <pm:field>
+                            <p:inputText value="#{cadastroMobileController.usuario.email}" validatorMessage="E-mail inválida" required="true" requiredMessage="Favor insere seu e-mail">
+                                <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                            </p:inputText>
+                        </pm:field>
+                        <p:outputLabel value="Telefone"></p:outputLabel>
+                        <pm:field>
+                            <p:inputText value="#{cadastroMobileController.usuario.telefone}" required="true" requiredMessage="Favor insere o telefone" validatorMessage="Telefone: Dígito o mínimo 8 número"  converter="ConverterTelefone">
+                                <f:validateLength minimum="8" />
+                            </p:inputText> 
+                        </pm:field>
+                    </p:panel>
+                    <pm:field>
+                        <p:commandButton value="Cadastro do Usuário" action="#{cadastroMobileController.salvarDadosUsuario()}"></p:commandButton>
+                    </pm:field>
+                    <p:messages id="mensagemCadastroMobile" autoUpdate="true"/>
+                </h:form>
+                <p:link outcome="/index.xhtml" value="Voltar ao Login"/>
+            </pm:content>
+        </pm:page>
+    </h:body>
+</html>

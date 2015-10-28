@@ -1,0 +1,48 @@
+
+#telaCadastro{
+    margin-top: 50px;
+    left: auto;
+    width: 600px;
+    margin: 0 auto ;
+}
+
+#telaCadastro tr, #telaCadastro td{
+    border: none;
+}
+
+#acessoPanel tr, #acessoPanel td{
+    border: none;
+}
+#dadosUsuario tr, #dadosUsuario td{
+    border: none;
+}
+
+#botoes tr, #botoes td{
+    border: none;
+}
+#enviarMensagem tr, #enviarMensagem td{
+    border: none;
+    width: 820px;
+}
+
+#acessoPanel{
+    width: 350px;
+    margin: 0 auto;
+}
+
+#telaPrincipal h1{
+    padding-top: 150px;
+    margin: 0 auto;
+}
+
+#TelaSenha{
+    margin-top: 50px;
+    left: auto;
+    width: 400px;
+    margin: 0 auto ;
+}
+
+#TelaSenha tr, #TelaSenha td{
+    border: none;
+}
+

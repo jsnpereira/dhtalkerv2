@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <f:view renderKitId="PRIMEFACES_MOBILE" />
+    <h:head>
+    </h:head>
+    <h:body>
+        <pm:page>
+            <pm:content>
+                <center>
+                    <img
+                        src="#{facesContext.externalContext.requestContextPath}/imagem/logo_letras_DH_Talker.PNG"
+                        height="120" width="140" />
+                </center>
+                <br />
+                <p:commandButton id="btn-menu" value="Menu" type="button"/>
+                <br />
+                <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay">
+                    <h2>Menu</h2>
+                    <h:form>
+                        <p:menu>
+                            <p:menuitem value="Principal" action="#{usuarioMobileControler.principal()}" />
+                            <p:menuitem value="Inicia o chat" action="#{usuarioMobileControler.iniciaChat()}" />
+                            <p:menuitem value="Alterar Senha" action="#{usuarioMobileControler.alterarSenha()}" />
+                            <p:menuitem value="sair"  action="#{usuarioMobileControler.logoutUsuario()}" />
+                        </p:menu>
+                    </h:form>
+                </p:overlayPanel>
+                <p:panel header="Dados Usuário">
+                    <h:form>
+                        <pm:field>
+                            <p:outputLabel value="Usuário:" />
+                            <p:outputLabel value="#{usuarioMobileControler.logon.usuario}" />
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="E-mail:" />
+                            <p:outputLabel value="#{usuarioMobileControler.logon.email}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="Nome:" />
+                            <p:outputLabel value="#{usuarioMobileControler.logon.nome}"/>
+                        </pm:field>
+                        <pm:field>
+                            <p:outputLabel value="Telefone:" />
+                            <p:outputLabel value="#{usuarioMobileControler.logon.telefone}"/>
+                        </pm:field>
+                    </h:form>
+                </p:panel>
+            </pm:content>
+        </pm:page>
+    </h:body>
+</html>

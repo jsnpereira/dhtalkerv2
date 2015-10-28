@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <f:view renderKitId="PRIMEFACES_MOBILE" />
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <pm:page>
+            <pm:content>
+                <center>
+                    <img
+                        src="#{facesContext.externalContext.requestContextPath}/imagem/logo_letras_DH_Talker.PNG"
+                        height="120" width="140" />
+                </center>
+                <br />
+                <p:commandButton id="btn-menu" value="Menu" type="button"/>
+                <br />
+                <p:overlayPanel for="btn-menu" widgetVar="pnl-basic" at="left" showEffect="overlay">
+                    <h2>Menu</h2>
+                    <h:form id="menu">
+                        <p:menu>
+                            <p:menuitem value="Principal" action="#{atendimentoMobileController.principal()}" />
+                            <p:menuitem value="Alterar Senha" action="#{atendimentoMobileController.alterarSenha()}" />
+                            <p:menuitem value="sair"  action="#{atendimentoMobileController.logoutUsuario()}" />
+                        </p:menu>
+                    </h:form>
+                </p:overlayPanel>
+                <h:form id="form">
+                    <h:panelGroup id="cadastro_usuario" rendered="#{not atendimentoMobileController.logedIn}" >
+                        <p:panel header="Solicitar a ligação">
+                            <p:outputLabel value="Usuário:"/>
+                            <pm:field> 
+                                <p:inputText id="nome_destino" value="#{atendimentoMobileController.cliente.nomeDestino}" required="true" requiredMessage="Favor insere seu usuário"  validatorMessage="Usuário: Dígito deve ser mínimo de 4 letras e máximo 20 letras"> 
+                                    <f:validateLength minimum="4" maximum="20"/>
+                                </p:inputText>
+                            </pm:field>
+                            <p:outputLabel value="Telefone:"/>
+                            <pm:field> 
+                                <p:inputText id="telefone_destino" value="#{atendimentoMobileController.cliente.telefoneDestino}" required="true" requiredMessage="Favor insere seu número do telefone"  validatorMessage="Telefone deve ser mínimo de 4 digito do número."> 
+                                    <f:validateLength minimum="3" maximum="20"/>
+                                </p:inputText>
+                            </pm:field>
+                            <p:commandButton value="Inicia no chat" action="#{atendimentoMobileController.iniciaChat()}" >
+                                <f:ajax render="dados" />
+                                <f:ajax render="form" />
+                            </p:commandButton>
+                        </p:panel>
+                        <p:messages />
+                    </h:panelGroup>
+                    <h:panelGroup id="chat_atendimento" rendered="#{atendimentoMobileController.logedIn}">
+                        <p:panel header="Sala do Atendimento">
+                            <p:panelGrid columns="2" style="width: 250px;">
+                                <p:outputLabel value="Atendimento: " /> <p:outputLabel class="channel" value="#{atendimentoMobileController.cliente.canal}" />
+                            </p:panelGrid>
+                            <p:panel header="Dados a ligar para usuário" id="dados">
+                                <h:panelGrid columns="2">
+                                    <p:outputLabel value="Usuário:"/>
+                                    <p:outputLabel value="#{atendimentoMobileController.cliente.nomeDestino}" class="nomedestino"/>
+                                    <p:outputLabel value="Telefone:"/>
+                                    <p:outputLabel value="#{atendimentoMobileController.cliente.telefoneDestino}"/>
+                                </h:panelGrid>
+                            </p:panel>
+                            <br />
+                            <p:panel header="chat">
+                                <p:outputLabel class="mensagens" id="msgs" style="font-size: 12px; padding-left: 10px; padding-top: 10px; width: auto; height: 300px; overflow-y: auto; border: thin solid black;" />
+                                <pm:field>
+                                    <p:outputLabel value="Mensagem:" />
+                                    <p:inputText id="inputMsg" value="#{atendimentoMobileController.mensagem}"  class="inputMensagem" />
+                                </pm:field>    
+                                <p:commandButton value="Enviar" action="#{atendimentoMobileController.enviarMensagem()}" update="inputMsg" />
+                            </p:panel>
+                            <p:commandButton value="Cancelar/Sair" action="#{atendimentoMobileController.cancelarChat()}" update="form" styleClass="limparMensagens()" />
+                        </p:panel>
+                    </h:panelGroup>
+                </h:form>
+            </pm:content>    
+        </pm:page>
+        <p:socket onMessage="handleMessage" channel="/message" />
+
+        <script type="text/javascript">
+            function handleMessage(data) {
+                var obj = JSON.parse(data.valueOf());
+
+                if ($(".channel").text() === obj.canal)
+                    $(".mensagens").append(obj.origem + ": " + obj.mensagem + "<br />");
+
+                $(".inputMensagem").focus();
+            }
+
+            function limparMensagens() {
+                $(".mensagens") = "";
+            }
+        </script>
+    </h:body>
+</html>

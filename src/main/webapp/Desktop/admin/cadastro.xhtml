@@ -1,0 +1,82 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../Layout/Template.xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns="http://www.w3.org/1999/xhtml">
+
+    <ui:define name="top">
+        <img src="#{facesContext.externalContext.requestContextPath}/imagem/logo_letras_DH_Talker.PNG" id="imagem_logo"  />
+    </ui:define>
+
+    <ui:define name="menu">
+        <div id="menuTelaUsuario">
+            <h:form>
+                <h:panelGrid columns="5" id="menu">
+                    <h:commandLink value="Portal principal" action="#{cadastroController.mainScreen()}" styleClass="buttonMenu" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;"/>
+                    <h:commandLink value="Historico" action="#{cadastroController.historicoScreen()}" styleClass="buttonMenu" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;" />
+                    <h:commandLink value="Cadastro" action="#{cadastroController.registerScreen()}" styleClass="buttonMenu" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;" />
+                    <h:commandLink value="Alterar senha" action="#{cadastroController.alterPasswordScreen()}" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;" />
+                    <h:commandLink value="#{cadastroController.logon.usuario} (sair)" action="#{cadastroController.logoutUsuario()}" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;"/>
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="content">
+        <br />
+        <center><h2>Cadastro do Usúario</h2></center>
+        <div id="telaCadastro">
+            <h:form>
+                <p:panel header="Login">
+                    <p:panelGrid columns="2">
+                        <p:outputLabel for="usuario" value="Usuário"/>
+                        <p:inputText id="usuario" value="#{cadastroController.usuario.usuario}" required="true" requiredMessage="Favor insere seu usuário"  validatorMessage="Usuário: Dígito deve ser mínimo de 4 letras e máximo 20 letras" > 
+                            <f:validateLength minimum="4" maximum="20"/>
+                        </p:inputText>
+                        <p:outputLabel for="senha" value="Nova Senha"/>
+                        <p:password id="senha" value="#{cadastroController.usuario.senha}" required="true" requiredMessage="Favor insere sua nova senha" validatorMessage="A senha deve ser mínima tamaho é 6 e máximo 30">
+                            <f:validateLength minimum="6" maximum="30"/>
+                        </p:password>
+                        <p:outputLabel for="repeteSenha" value="Repetir Senha"/>
+                        <p:password id="repeteSenha" value="#{cadastroController.repeatPassword}" required="true" requiredMessage="Favor insere sua nova senha repetida"  validatorMessage="A repete senha deve ser mínima tamaho é 6 e máximo 30" >
+                            <f:validateLength minimum="6" maximum="30"/>
+                        </p:password>
+                    </p:panelGrid>
+                </p:panel>
+                <br/>
+                <p:panel header="Cadastro">
+                    <p:panelGrid columns="4">
+                        <p:outputLabel for="nome" value="Nome"/>
+                        <p:inputText id="nome" value="#{cadastroController.usuario.nome}" required="true" requiredMessage="Favor insere seu nome" validatorMessage="Nome: Letra dever digito o mínimo 3 letras e máximo 30 letras" >
+                            <f:validateLength minimum="3" maximum="30"/>
+                        </p:inputText>
+                        <p:outputLabel for="telefone" value="Telefone"/>
+                        <p:inputMask id="telefone" value="#{cadastroController.usuario.telefone}" required="true" requiredMessage="Favor insere o telefone" validatorMessage="Telefone: Dígito o mínimo 4 número" mask="(99) 9999-9999" converter="ConverterTelefone" converterMessage="Converter não foram sucesso">
+                            <f:validateLength minimum="4" />
+                        </p:inputMask> 
+                        <p:outputLabel for="email" value="E-mail"/>
+                        <p:inputText id="email" value="#{cadastroController.usuario.email}" validatorMessage="E-mail inválida" required="true" requiredMessage="Favor insere seu e-mail">
+                            <f:validateRegex pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                        </p:inputText>
+                        <p:outputLabel for="categoria" value="Categoria"/>
+                        <p:selectOneMenu id="categoria" value="#{cadastroController.typeIdentity}" required="true" requiredMessage="Deve ser selecionar a categoria" converter="ConverterStringToInt">
+                            <f:selectItem itemLabel="---Seleciona aqui---" itemValue="0" noSelectionOption="true" />
+                            <f:selectItem itemLabel="Administração" itemValue="1"/>
+                            <f:selectItem itemLabel="Usuário" itemValue="2"/>
+                            <f:selectItem itemLabel="Atendimento" itemValue="3"/>
+                        </p:selectOneMenu>
+                    </p:panelGrid>
+                    <center>
+                        <p:commandButton value="Salvar" action="#{cadastroController.saveData()}" ajax="false"/>
+                        <p:commandButton value="Limpar" type="reset"/>
+                    </center>
+                </p:panel>
+                <p:messages id="mensagemCadastro"/>
+            </h:form>
+        </div>
+    </ui:define>
+
+</ui:composition>

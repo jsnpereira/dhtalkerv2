@@ -1,0 +1,51 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      template="./Layout/Template.xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns="http://www.w3.org/1999/xhtml">
+
+    <body>
+
+        <ui:composition template="./Layout/Template.xhtml">
+
+            <ui:define name="top">
+                <br />
+                <br />
+                <center>
+                    <img
+                        src="#{facesContext.externalContext.requestContextPath}/imagem/Logo_DH_Talker.PNG"
+                        height="120" width="140" />
+                </center>
+            </ui:define>
+
+            <ui:define name="content">
+                <br />
+                <br />
+                <div id="acessoPanel">
+                    <h:form>
+                        <center>
+                            <p:panel header="Acessar do usuário">
+                                <p:panelGrid columns="2" id="panelLogin">
+                                    <p:outputLabel for="usuario" value="Usuário" />
+                                    <p:inputText id="usuario" value="#{loginBean.login.usuario}"
+                                                 required="true"
+                                                 requiredMessage="Favor preencher o campo do usuário" />
+                                    <p:outputLabel for="senha" value="Senha" />
+                                    <p:password id="senha" value="#{loginBean.login.senha}"
+                                                required="true"
+                                                requiredMessage="Favor preencher o campo da senha" />
+                                </p:panelGrid>
+                                <p:commandButton value="Acessar" action="#{loginBean.logon()}"
+                                                 ajax="false" />
+                            </p:panel>
+                        </center>
+                    </h:form>
+                    <p:messages id="mensagemLogin" />
+                </div>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

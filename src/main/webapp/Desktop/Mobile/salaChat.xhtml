@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:pm="http://primefaces.org/mobile"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+    <f:view renderKitId="PRIMEFACES_MOBILE" />
+    <h:head>
+        <title>TODO supply a title</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <pm:page>
+            <h:form onclick="openSocket()">
+                <h:inputHidden value="#{chatAtendimento.cliente.canal}" id="chatroom" />
+                <p:panel header="Sala do Atendimento">
+                    <p:panel header="Dados a ligar para usuário">
+                        <h:panelGrid columns="2" id="dado">
+                            <p:outputLabel value="Usuário:"/>
+                            <p:outputLabel value="#{chatMobileController.cliente.nomeDestino}"/>
+                            <p:outputLabel value="Telefone:"/>
+                            <p:outputLabel value="#{chatMobileController.cliente.telefoneDestino}"/>
+                        </h:panelGrid>
+                    </p:panel>
+                    <br />
+                    <p:panel header="Chat">
+                        <h:inputHidden value="#{chatMobileController.cliente.usuario.nome}" id="nickname"/>
+                        <div id="msgs" style="padding-left: 10px; width: 3000px; height: 400px; overflow-y: auto; overflow-x: hidden; border: thin solid black;"/>
+                        <pm:field>
+                            <p:outputLabel value="Mensagem:" />
+                            <p:inputTextarea autoResize="false" id="msg"  />
+                        </pm:field>    
+                        <p:commandButton value="Enviar" onclick="send()"/>
+                    </p:panel>
+                    <p:commandButton value="Cancelar/Sair" action="#{chatMobileController.cancelar()}" onclick="closeSocket()" />
+                </p:panel>
+            </h:form>
+        </pm:page>
+
+        <script>
+            var webSocket;
+            var messages = document.getElementById("msgs");
+            var usuario;
+
+            function openSocket() {
+                alert("WS - Inicia");
+                var chatroom = document.getElementById("chatroom").value;
+                usuario = document.getElementById("nickname").value;
+                
+                writeResponse("Aguarde o atendimento irá contato em breve!");
+                if (webSocket !== undefined) {
+                    if (webSocket.readyState !== WebSocket.CLOSED) {
+                        writeResponse("WebSocket is already opened.");
+                        return;
+                    }
+                }
+                webSocket = new WebSocket("ws://localhost:8080/dhtalkerv2/chat/" + room);
+                
+                
+                webSocket.onopen = function (event) {
+                    alert("WS - conectado");
+                    if (event.data === undefined)
+                        return;
+
+                    writeResponse(event.data);
+                };
+
+                webSocket.onmessage = function (event) {
+                   alert("WS - menssagem: "+event.data);
+                    writeResponse(event.data);
+                };
+
+                webSocket.onclose = function (event) {
+                   alert("WS - fechado");
+                    closeSocket();
+                };
+            }
+
+            function send() {
+                var mensagemInput = document.getElementById("msg").value;
+                var text = usuario + ': ' + mensagemInput;
+                webSocket.send(text);
+            }
+
+            function closeSocket() {
+                writeResponse("Saindo na sala");
+                webSocket.close();
+            }
+
+            function writeResponse(text) {
+                messages.innerHTML += "<br/>" + text;
+            }
+        </script>
+    </h:body>
+</html>

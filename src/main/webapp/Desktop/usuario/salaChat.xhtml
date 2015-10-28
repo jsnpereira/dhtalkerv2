@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                template="./../../Layout/Template.xhtml"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <ui:define name="top">
+        <img src="#{facesContext.externalContext.requestContextPath}/imagem/logo_letras_DH_Talker.PNG" id="imagem_logo"  />
+    </ui:define>
+
+    <ui:define name="menu">
+        <div id="menuTelaUsuario">
+            <h:form>
+                <h:panelGrid columns="5" id="menu">
+                    <h:commandLink value="Portal principal" action="#{chatAtendimento.mainScreen()}" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;" />
+                    <h:commandLink value="Alterar Senha" action="#{chatAtendimento.alterPasswordScreen()}" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;"/>
+                    <h:commandLink value="#{chatAtendimento.logon.usuario} (sair)" action="#{chatAtendimento.logoutUsuario()}" style="display: inline-block; background-color: #ccc; color: #444; padding: 10px 20px; text-decoration: none; box-sizing: border-box; font-family: Helvetica, Arial, sans-serif; font-size: 14px; border: 0px;"/> 
+                </h:panelGrid>
+            </h:form>
+        </div>
+    </ui:define>
+
+    <style type="text/css">
+        #dadosUsuario tr, #dadosUsuario td {
+            border: 0px;
+        }
+    </style>
+
+    <ui:define name="content">
+        <h:form>
+            <p:panel header="Atendimento">
+                <div id="botoes">
+                    <p:panelGrid columns="3">
+                        <p:commandButton value="Inicia o cliente" action="#{chatAtendimento.iniciaCliente()}" ajax="true">
+                            <f:ajax render="dados_header"/>
+                            <f:ajax render="mLabel"/>
+                            <f:ajax render="botoes"/>
+                        </p:commandButton>
+                        <p:commandButton value="finalizar o chat" action="#{chatAtendimento.finalizarCliente()}" ajax="true" onclick="limparMensagens()" >
+                            <f:ajax render="dados_header"/>
+                            <f:ajax render="mLabel"/>
+                            <f:ajax render="botoes"/>
+                        </p:commandButton>
+                        <p:outputLabel value="#{chatAtendimento.notificacao}" id="mLabel" >
+                        </p:outputLabel>
+                    </p:panelGrid>
+                </div>
+                <p:panel header="Dados" id="dados_header">
+                    <div id="dadosUsuario">
+                        <p:panelGrid columns="2"  style="width: 250px;">
+                            <p:outputLabel value="Atendimento: " />
+                            <p:outputLabel value="#{chatAtendimento.cliente.canal}" class="channel" />
+                        </p:panelGrid>
+                        <p:panelGrid columns="4">
+                            <p:outputLabel value="Usuário: " for="usuario"/>
+                            <p:outputLabel value="#{chatAtendimento.cliente.usuario.nome}" id="usuario" />
+                            <p:outputLabel value="Telefone: " for="telefone"/>
+                            <p:outputLabel value="#{chatAtendimento.cliente.usuario.telefone}" id="telefone" />
+                            <p:outputLabel value="Usuário final: " for="usuariofinal"/>
+                            <p:outputLabel value="#{chatAtendimento.cliente.nomeDestino}" id="usuariofinal" />
+                            <p:outputLabel value="Telefone: " for="telefonefinal"/>
+                            <p:outputLabel value="#{chatAtendimento.cliente.telefoneDestino}" id="telefonefinal" />
+                        </p:panelGrid>
+                    </div>
+                </p:panel>
+                <br />
+                <p:panel header="Chat">
+                    <div class="mensagens" id="msgs" style="padding-left: 10px; width: auto; height: 300px; overflow-y: auto; overflow-x: hidden; border: thin solid black;" />
+                    <br/>
+                    <div id="enviarMensagem " >
+                        <p:inputText value="#{chatAtendimento.mensagem}" class="inputMensagem" id="msg" style="padding-left: 10px; width: 600px; height: 50px" /> 
+                        <p:commandButton value="Enviar" action="#{chatAtendimento.enviar()}" style="margin-left: 10px" update="msg"/>
+                    </div>
+                </p:panel>
+            </p:panel>
+        </h:form>
+
+        <p:socket onMessage="handleMessage" channel="/message" />
+
+        <script type="text/javascript">
+            function handleMessage(data) {
+                var obj = JSON.parse(data.valueOf());
+
+                if ($(".channel").text() === obj.canal)
+                    $(".mensagens").append(obj.origem + ": " + obj.mensagem + "<br />");
+
+                $(".inputMensagem").focus();
+            }
+
+            function limparMensagens() {
+                $(".mensagens") = "";
+            }
+        </script>
+    </ui:define>
+</ui:composition>
